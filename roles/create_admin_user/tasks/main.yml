@@ -1,0 +1,22 @@
+---
+- name: Add user
+  user:
+    name: "{{ username }}"
+    groups:
+      - sudo
+    state: present
+
+- name: Set authorized key
+  authorized_key:
+    user: "{{ username }}"
+    state: present
+    key: "{{ user_key }}"
+
+- name: add block for user in sudoers
+  blockinfile:
+    path: /etc/sudoers
+    state: present
+    block: |
+      "{{ username }}" ALL=(ALL) NOPASSWD: ALL
+    backup: yes
+    validate: visudo -cf %s

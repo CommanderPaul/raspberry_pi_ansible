@@ -1,0 +1,25 @@
+--- # update and install
+
+- name: update the cache
+  apt:
+   update_cache: yes
+
+- name: upgrade all packages
+  apt:
+    upgrade: full
+    force_apt_get: yes
+
+- name: perform autoclean
+  apt:
+    autoclean: yes
+    force_apt_get: yes
+
+- name: perform autoremove
+  apt:
+    autoremove: yes
+    force_apt_get: yes
+
+- name: ensure vim is installed
+  apt:
+   name: vim
+   state: present

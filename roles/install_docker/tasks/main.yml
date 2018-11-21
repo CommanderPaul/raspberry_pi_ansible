@@ -1,0 +1,42 @@
+--- # install_docker for raspian stretch
+- name: ensure docker pre requsites
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg2
+    - software-properties-common
+    state: present
+
+# TODO validate key
+- name: add apt signing key for docker
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    state: present
+
+- name: add docker repo
+  apt_repository:
+    repo: deb [arch=armhf] https://download.docker.com/linux/debian stretch stable
+    state: present
+
+# TODO only if repo was added
+- name: update the cache
+  apt:
+   update_cache: yes
+
+- name: ensure docker is installed
+  apt:
+   name: docker-ce
+   state: present
+
+# TODO abstract out username
+- name: add admin user to docker
+  user:
+    #name: "{{ username }}"
+    name: willi
+    groups:
+      - docker
+    state: present

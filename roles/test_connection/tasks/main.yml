@@ -1,0 +1,13 @@
+- name: Find /var/log files
+  find:
+    paths: /home
+    file_type: directory
+
+  register: files_matched
+
+- debug:
+    msg: "{{ files_matched.files }}"
+
+
+# - debug:
+#     msg: "{{ user_key }}"

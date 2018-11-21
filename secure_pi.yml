@@ -1,0 +1,17 @@
+--- # secure raspberry pi from default settings.
+- name: Secure new raspberry pi
+  hosts: my_pi
+  remote_user: pi
+  gather_facts: no
+  become: yes
+
+  vars:
+    username: willi
+    user_key: "{{ lookup('file', '/home/willi/.ssh/general_elliptic.pub') }}"
+
+  roles:
+    - create_admin_user
+    - secure_sshd_config
+
+    # after ssh restart, which is kind of slow,
+    # pi username should no longer work for ssh login

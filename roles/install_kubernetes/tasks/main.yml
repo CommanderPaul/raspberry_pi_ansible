@@ -1,0 +1,41 @@
+--- # install_kubernetes for raspian stretch
+
+- name: uninstall dphys-swapfile
+  apt:
+    name: dphys-swapfile
+    state: absent
+
+- name: check for swap
+  command: swapon -s
+  register: swap_present
+  changed_when: False
+
+- name: turn off swap
+  command: dphys-swapfile swapoff
+  when: swap_present.stdout != ""
+
+- name: disable swap at boot
+  service:
+    name: dphys-swapfile
+    enabled: no
+  when: swap_present.stdout != ""
+
+- name: add apt signing key for kubernetes
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+
+- name: add kubernetes repo
+  apt_repository:
+    repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+
+# TODO only if repo was added
+- name: update the cache
+  apt:
+   update_cache: yes
+
+- name: ensure kubeadm is installed
+  apt:
+   name: kubeadm
+   state: present
