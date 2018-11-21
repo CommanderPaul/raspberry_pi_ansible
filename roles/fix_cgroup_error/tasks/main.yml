@@ -1,0 +1,29 @@
+--- # fix cgroup error for raspian stretch
+
+# error is [ERROR SystemVerification]: missing cgroups: memory
+# fix is to add cgroup_enable=cpuset cgroup_enable=memory
+# to the end of /boot/cmdline.txt and then reboot
+
+- name: read the file
+  shell: cat /boot/cmdline.txt
+  register: boot_params_cpuset
+  changed_when: False
+
+- name: insert cgroup_enable=cpuset
+  shell: echo "{{ boot_params_cpuset.stdout }} cgroup_enable=cpuset" > /boot/cmdline.txt
+  when: boot_params_cpuset.stdout.find('cgroup_enable=cpuset') == -1
+
+- name: read the file
+  shell: cat /boot/cmdline.txt
+  register: boot_params_memory
+  changed_when: False
+
+- name: insert cgroup_enable=memory
+  shell: echo "{{ boot_params_memory.stdout }} cgroup_enable=memory" > /boot/cmdline.txt
+  when: boot_params_memory.stdout.find('cgroup_enable=memory') == -1
+
+- name: reboot machine
+  reboot:
+  when:
+    - boot_params_cpuset.stdout.find('cgroup_enable=cpuset') == -1
+    - boot_params_memory.stdout.find('cgroup_enable=memory') == -1

@@ -18,4 +18,5 @@
     - update_and_install
     - install_docker
     - install_kubernetes
+    - fix_cgroup_error
     # - test_connection
