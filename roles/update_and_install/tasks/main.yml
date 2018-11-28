@@ -4,10 +4,11 @@
   apt:
    update_cache: yes
 
-- name: upgrade all packages
-  apt:
-    upgrade: full
-    force_apt_get: yes
+# TODO do not upgrade until docker version is frozen
+# - name: upgrade all packages
+#   apt:
+#     upgrade: full
+#     force_apt_get: yes
 
 - name: perform autoclean
   apt:
@@ -23,3 +24,27 @@
   apt:
    name: vim
    state: present
+
+#### configure hosts and hostname
+- name: set hostname based on inventory
+  hostname:
+    name: "{{ new_hostname }}"
+
+- name: add neighbors to hosts
+  lineinfile:
+    path: /etc/hosts
+    regexp: "^{{ item.value.inventory_hostname }}"
+    line: "{{ item.value.inventory_hostname }} \t {{ item.value.new_hostname }}"
+    state: present
+  with_dict: "{{ hostvars }}"
+  # suppress verbosity with loop control
+  loop_control:
+    label: "{{ item.value.new_hostname }}  {{ item.value.inventory_hostname }}"
+
+# https://serverfault.com/questions/363095/why-does-my-hostname-appear-with-the-address-127-0-1-1-rather-than-127-0-0-1-in
+- name: configure local dns in hosts file
+  lineinfile:
+    path: /etc/hosts
+    regexp: '^127.0.1.1'
+    line: "127.0.1.1  \t {{ new_hostname }}"
+    state: present
