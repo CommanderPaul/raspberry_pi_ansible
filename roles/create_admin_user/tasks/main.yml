@@ -2,8 +2,10 @@
 - name: Add user
   user:
     name: "{{ username }}"
+    shell: /bin/bash
     groups:
       - sudo
+    append: yes
     state: present
 
 - name: Set authorized key
