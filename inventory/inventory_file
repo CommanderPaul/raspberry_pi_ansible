@@ -1,8 +1,8 @@
 [raspberries]
-192.168.1.248
-192.168.1.77
-192.168.1.113
-192.168.1.162
+192.168.1.248    new_hostname=kube-master
+192.168.1.77     new_hostname=kube1
+192.168.1.113    new_hostname=kube2
+192.168.1.162    new_hostname=kube3
 
 [raspberries:vars]
 ansible_python_interpreter=/usr/bin/python3
