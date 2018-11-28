@@ -11,12 +11,12 @@
     - software-properties-common
     state: present
 
-# TODO validate key
 - name: add apt signing key for docker
   apt_key:
     url: https://download.docker.com/linux/debian/gpg
     state: present
 
+# armhf for hardware float
 - name: add docker repo
   apt_repository:
     repo: deb [arch=armhf] https://download.docker.com/linux/debian stretch stable
@@ -27,16 +27,17 @@
   apt:
    update_cache: yes
 
+# version 18.09.0 not yet supported by kubernetes.  Only up to 18.06.0
 - name: ensure docker is installed
   apt:
-   name: docker-ce
+   name: "docker-ce=18.06.1~ce~3-0~debian"
    state: present
 
-# TODO abstract out username
+# TODO needs apt-mark hold docker-ce=18.03.0~ce-0~debian
+
 - name: add admin user to docker
   user:
-    #name: "{{ username }}"
-    name: willi
+    name: "{{ username }}"
     groups:
       - docker
     state: present
