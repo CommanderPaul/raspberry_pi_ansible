@@ -62,12 +62,12 @@ vars:
 ### Secure the Raspberry Pi's
 Run the Ansible script **secure_pi.yml**.
 ```
-ansible-play secure_pi.yml
+ansible-playbook secure_pi.yml
 ```
 The play logs in as the default user and creates an admin user, uploads the key, and turns off ssh via password.  When the ssh daemon restarts, the default user will no longer be able to ssh into the Raspberry Pi's, but local access will still work.
 ### Configure Raspberry Pi's
 Run the Ansible script **configure_pi.yml**.
 ```
-ansible-play configure_pi.yml
+ansible-playbook configure_pi.yml
 ```
 The play ssh's in as the admin user, installs Docker and Kubernetes for arm, and configures Raspbian Stretch operating system to run Kubernetes.
