@@ -27,4 +27,5 @@
     - update_and_install
     - install_docker
     - install_kubernetes
+    - add_jenkins_user
     - fix_cgroup_error

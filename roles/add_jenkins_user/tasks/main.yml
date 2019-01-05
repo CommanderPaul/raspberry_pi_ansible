@@ -1,0 +1,10 @@
+---
+- name: Add jenkins as system user
+  user:
+    name: jenkins
+    uid: 500
+    system: yes
+    groups:
+      - docker
+    append: yes
+    state: present
