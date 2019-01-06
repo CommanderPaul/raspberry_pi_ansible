@@ -8,3 +8,22 @@
       - docker
     append: yes
     state: present
+
+# we need a predictable groupid for docker so that we can use jenkins
+# container to spin up additional containers beside itself.
+
+- name: Get current gid for docker
+  shell: |
+    getent group docker | cut -d: -f3
+  register: docker_gid
+  changed_when: False
+
+- name: Set docker gid to known value
+  command: groupmod -g 505 docker
+  when: docker_gid.stdout != "505"
+
+- name: Update group ownership of affected files
+  command: "sudo find / -group {{ docker_gid.stdout | int }} -exec chgrp -h docker {} \ ;"
+  ignore_errors: True
+  changed_when: False
+  when: docker_gid.stdout != "505"
